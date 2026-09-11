@@ -103,9 +103,12 @@ export const Dashboard = ({
         {/* Circular Cycle Ring */}
         <div style={{ display: 'flex', justifyContent: 'center', margin: '1.25rem 0' }}>
           <div
+            className="cycle-ring-petal"
             style={{
-              width: '210px',
-              height: '210px',
+              width: 'clamp(180px, 48vw, 210px)',
+              height: 'clamp(180px, 48vw, 210px)',
+              aspectRatio: '1 / 1',
+              flexShrink: 0,
               borderRadius: '50%',
               background: isFertilityMode
                 ? 'radial-gradient(circle, #fffef7 0%, #fff7d6 60%, #ffecaa 100%)'
@@ -124,7 +127,7 @@ export const Dashboard = ({
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>
               {t.activeCycleDay}
             </span>
-            <span style={{ fontSize: '3.6rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: isFertilityMode ? 'var(--accent-amber)' : 'var(--accent-rose)', lineHeight: 1 }}>
+            <span style={{ fontSize: '3.4rem', fontFamily: 'var(--font-display)', fontWeight: 800, color: isFertilityMode ? 'var(--accent-amber)' : 'var(--accent-rose)', lineHeight: 1 }}>
               {cycleDay}
             </span>
             <span style={{ fontSize: '0.78rem', color: 'var(--accent-plum)', fontWeight: 700, marginTop: '0.2rem' }}>
@@ -169,8 +172,8 @@ export const Dashboard = ({
 
       {/* 3 Soft Status Cards */}
       <div className="grid-3">
-        <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem' }}>
-          <div className="card-icon-bubble" style={{ background: 'var(--accent-rose-soft)', color: 'var(--accent-rose)', width: '48px', height: '48px' }}>
+        <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.15rem' }}>
+          <div className="card-icon-bubble" style={{ background: 'var(--accent-rose-soft)', color: 'var(--accent-rose)', width: '46px', height: '46px', minWidth: '46px', minHeight: '46px', flexShrink: 0, aspectRatio: '1 / 1' }}>
             <Droplets size={22} />
           </div>
           <div>
@@ -179,8 +182,8 @@ export const Dashboard = ({
           </div>
         </div>
 
-        <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem' }}>
-          <div className="card-icon-bubble" style={{ background: 'var(--accent-teal-soft)', color: 'var(--accent-teal)', width: '48px', height: '48px' }}>
+        <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.15rem' }}>
+          <div className="card-icon-bubble" style={{ background: 'var(--accent-teal-soft)', color: 'var(--accent-teal)', width: '46px', height: '46px', minWidth: '46px', minHeight: '46px', flexShrink: 0, aspectRatio: '1 / 1' }}>
             <Smile size={22} />
           </div>
           <div>
@@ -189,8 +192,8 @@ export const Dashboard = ({
           </div>
         </div>
 
-        <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem' }}>
-          <div className="card-icon-bubble" style={{ background: 'var(--accent-amber-soft)', color: 'var(--accent-amber)', width: '48px', height: '48px' }}>
+        <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.15rem' }}>
+          <div className="card-icon-bubble" style={{ background: 'var(--accent-amber-soft)', color: 'var(--accent-amber)', width: '46px', height: '46px', minWidth: '46px', minHeight: '46px', flexShrink: 0, aspectRatio: '1 / 1' }}>
             <Thermometer size={22} />
           </div>
           <div>

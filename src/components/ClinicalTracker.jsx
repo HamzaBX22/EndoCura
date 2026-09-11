@@ -273,7 +273,7 @@ export const ClinicalTracker = ({
           </span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem' }}>
+        <div className="pain-rating-grid">
           {[
             { level: 0, label: t.pain0, icon: '😊' },
             { level: 3, label: t.pain3, icon: '😐' },
@@ -295,7 +295,7 @@ export const ClinicalTracker = ({
               }}
             >
               <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{item.icon}</div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>{item.label}</div>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)' }}>{item.label}</div>
             </button>
           ))}
         </div>

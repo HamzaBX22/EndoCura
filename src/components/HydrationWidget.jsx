@@ -32,13 +32,13 @@ export const HydrationWidget = ({ lang = 'bn' }) => {
   const percentage = Math.round((glasses / totalGoal) * 100);
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.25rem' }}>
+    <div className="hydration-widget-grid">
       {/* 1. Water Tracker */}
       <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div className="card-icon-bubble" style={{ background: '#e0f2fe', color: '#0284c7' }}>
+              <div className="card-icon-bubble" style={{ background: '#e0f2fe', color: '#0284c7', flexShrink: 0, width: '40px', height: '40px', minWidth: '40px', minHeight: '40px', aspectRatio: '1 / 1' }}>
                 <Droplets size={20} />
               </div>
               <div>
@@ -63,7 +63,7 @@ export const HydrationWidget = ({ lang = 'bn' }) => {
           </p>
 
           {/* 8 Tap-to-Fill Glass Icons */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.4rem', margin: '0.75rem 0' }}>
+          <div className="hydration-glasses-row" style={{ display: 'flex', justifyContent: 'space-between', gap: '0.35rem', margin: '0.75rem 0', width: '100%' }}>
             {Array.from({ length: totalGoal }).map((_, i) => {
               const isDrank = i < glasses;
               return (
@@ -71,9 +71,11 @@ export const HydrationWidget = ({ lang = 'bn' }) => {
                   key={i}
                   type="button"
                   onClick={() => toggleGlass(i)}
+                  className="hydration-glass-btn"
                   style={{
                     flex: 1,
-                    height: '48px',
+                    minWidth: 0,
+                    height: '46px',
                     borderRadius: 'var(--radius-sm)',
                     background: isDrank ? '#bae6fd' : 'var(--bg-surface-elevated)',
                     border: `1.5px solid ${isDrank ? '#0284c7' : 'var(--border-subtle)'}`,
@@ -86,7 +88,7 @@ export const HydrationWidget = ({ lang = 'bn' }) => {
                   }}
                   title={`Glass ${i + 1}`}
                 >
-                  <Droplets size={18} color={isDrank ? '#0284c7' : 'var(--text-muted)'} fill={isDrank ? '#0284c7' : 'none'} />
+                  <Droplets size={17} color={isDrank ? '#0284c7' : 'var(--text-muted)'} fill={isDrank ? '#0284c7' : 'none'} style={{ flexShrink: 0 }} />
                 </button>
               );
             })}

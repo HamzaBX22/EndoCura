@@ -51,19 +51,21 @@ export const Header = ({
         <div className="header-actions">
           {/* Profile & Settings Trigger */}
           <button
-            className="btn-secondary"
+            className="btn-secondary header-btn"
             onClick={onOpenProfileSettings}
             title={t.profileSettings}
             style={{
-              padding: '0.35rem 0.75rem',
-              display: 'flex',
+              padding: '0.35rem 0.65rem',
+              display: 'inline-flex',
               alignItems: 'center',
               gap: '0.45rem',
               border: '1.5px solid var(--border-active)',
-              background: 'var(--bg-surface-elevated)'
+              background: 'var(--bg-surface-elevated)',
+              flexShrink: 0
             }}
           >
             <div
+              className="header-avatar-badge"
               style={{
                 width: '24px',
                 height: '24px',
@@ -74,42 +76,46 @@ export const Header = ({
                 fontWeight: 700,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexShrink: 0,
+                aspectRatio: '1 / 1'
               }}
             >
               {profile?.name ? profile.name.charAt(0) : 'A'}
             </div>
-            <span style={{ fontSize: '0.82rem', fontWeight: 600, maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span className="hide-on-mobile" style={{ fontSize: '0.82rem', fontWeight: 600, maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {firstName}
             </span>
-            <Settings size={14} color="var(--text-muted)" />
+            <Settings size={14} color="var(--text-muted)" className="hide-on-mobile" />
           </button>
 
           {/* Language Switch */}
           <button
-            className="btn-secondary"
+            className="btn-secondary header-btn"
             onClick={toggleLanguage}
             title="Switch Language"
+            style={{ flexShrink: 0, padding: '0.45rem 0.65rem' }}
           >
             <Globe size={15} />
-            <span>{t.langToggle}</span>
+            <span className="hide-on-mobile">{t.langToggle}</span>
           </button>
 
           {/* Pain SOS */}
           <button
-            className="btn-sos-glow"
+            className="btn-sos-glow header-btn"
             onClick={onOpenSOS}
             title="Emergency Pain Flare Relief"
+            style={{ flexShrink: 0, padding: '0.45rem 0.75rem' }}
           >
             <Flame size={15} />
-            <span>{t.painSOS}</span>
+            <span>SOS</span>
           </button>
 
           {/* Theme Toggle */}
           <button
-            className="btn-secondary"
+            className="btn-secondary header-btn"
             onClick={toggleTheme}
-            style={{ padding: '0.55rem 0.65rem' }}
+            style={{ padding: '0.45rem 0.65rem', flexShrink: 0 }}
             title="Toggle theme"
           >
             {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}

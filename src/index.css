@@ -157,17 +157,27 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+/* Anti-Squish & SVG Protection */
+svg {
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .logo-group {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-width: 0;
 }
 
 .logo-badge {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   background: linear-gradient(135deg, #ff6584, #ff8da1);
   display: flex;
@@ -184,18 +194,21 @@ button {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  white-space: nowrap;
 }
 
 .brand-subtitle {
   font-size: 0.76rem;
   color: var(--text-secondary);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
 /* Simplified 4-Tab Navigation */
@@ -272,6 +285,10 @@ button {
 .card-icon-bubble {
   width: 38px;
   height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  flex-shrink: 0;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -371,25 +388,24 @@ button {
   box-shadow: 0 6px 22px rgba(255, 77, 109, 0.5);
 }
 
-/* Tap Card Styles (Ultra-Simple Flow Logging) */
+/* Grids & Layouts */
+.hydration-widget-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.25rem;
+}
+
+.pain-rating-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.65rem;
+}
+
 .flow-card-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.85rem;
   margin: 1rem 0;
-}
-
-@media (max-width: 768px) {
-  .flow-card-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .grid-2, .grid-3, .grid-4 {
-    grid-template-columns: 1fr !important;
-  }
-  .nav-tab-bar {
-    max-width: 100%;
-    overflow-x: auto;
-  }
 }
 
 .flow-tap-card {
@@ -417,7 +433,6 @@ button {
   box-shadow: 0 4px 18px rgba(255, 101, 132, 0.2);
 }
 
-/* Grids */
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -434,6 +449,111 @@ button {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
+}
+
+/* Mobile Responsiveness & Anti-Squish */
+@media (max-width: 768px) {
+  .header-glass {
+    padding: 0.55rem 0.8rem;
+  }
+
+  .header-inner {
+    gap: 0.4rem;
+  }
+
+  .logo-group {
+    gap: 0.45rem;
+  }
+
+  .logo-badge {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+  }
+
+  .brand-title {
+    font-size: 1.08rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.68rem;
+  }
+
+  .header-actions {
+    gap: 0.35rem;
+  }
+
+  .hide-on-mobile {
+    display: none !important;
+  }
+
+  /* Navigation: Smooth Horizontal Pill Scroll */
+  .nav-tab-bar {
+    max-width: 100%;
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: flex-start;
+    padding: 0.35rem 0.5rem;
+    gap: 0.35rem;
+    border-radius: var(--radius-full);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1.25rem;
+  }
+
+  .nav-tab-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-tab-btn {
+    flex: 0 0 auto !important;
+    padding: 0.5rem 0.85rem !important;
+    font-size: 0.82rem !important;
+    gap: 0.35rem !important;
+  }
+
+  .main-content {
+    padding: 0.85rem 0.65rem 3.5rem 0.65rem;
+  }
+
+  .glass-card {
+    padding: 1.15rem 0.95rem;
+  }
+
+  /* 1-column collapses */
+  .grid-2, .grid-3, .grid-4 {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .hydration-widget-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  /* Pain cards: 2 columns on phone */
+  .pain-rating-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+
+  /* Flow cards: 2 columns on phone */
+  .flow-card-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+
+  .flow-tap-card {
+    padding: 0.85rem 0.5rem !important;
+  }
+
+  .cycle-ring-petal {
+    width: clamp(170px, 46vw, 195px) !important;
+    height: clamp(170px, 46vw, 195px) !important;
+  }
 }
 
 /* Print Rules */
