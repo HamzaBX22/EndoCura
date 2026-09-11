@@ -168,28 +168,59 @@ class SoundSynthesizer {
     this.currentTrack = 'drone';
   }
 
-  // Soft Singing Bowl / Chime for Timer Completion
+  // Soft singing bowl / chime for timer completion
   playGong() {
-    this.initContext();
-    const now = this.ctx.currentTime;
-    
-    const freqs = [528, 792, 1056]; // Solfeggio 528Hz harmonic
-    freqs.forEach((freq, idx) => {
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
+      
+      const freqs = [528, 792, 1056]; // Solfeggio 528Hz harmonic
+      freqs.forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.3 / (idx + 1), now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.5);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 3.5);
+      });
+    } catch (e) {
+      // Audio autoplay policy fallback
+    }
+  }
+
+  // Gentle micro-haptic click feedback
+  playTap() {
+    try {
+      this.initContext();
+      if (!this.ctx) return;
+      const now = this.ctx.currentTime;
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(300, now + 0.035);
 
-      gain.gain.setValueAtTime(0.3 / (idx + 1), now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.5);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
 
       osc.connect(gain);
       gain.connect(this.ctx.destination);
 
       osc.start(now);
-      osc.stop(now + 3.5);
-    });
+      osc.stop(now + 0.035);
+    } catch (e) {
+      // Audio autoplay fallback
+    }
   }
 }
 

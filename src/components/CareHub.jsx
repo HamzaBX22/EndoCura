@@ -30,16 +30,27 @@ export const CareHub = ({ lang = 'bn' }) => {
   const [timerSec, setTimerSec] = useState(currentEx.durationSec);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
+  // Bulletproof safe haptic tap that never blocks state update
+  const playSafeTap = () => {
+    try {
+      if (soundSynth && typeof soundSynth.playTap === 'function') {
+        soundSynth.playTap();
+      }
+    } catch (e) {
+      // Fallback
+    }
+  };
+
   const toggleTask = (key) => {
-    soundSynth.playTap();
     setCheckedTasks(prev => ({ ...prev, [key]: !prev[key] }));
+    playSafeTap();
   };
 
   const handleSelectEx = (idx) => {
-    soundSynth.playTap();
     setActiveExIdx(idx);
     setTimerSec(somaticExercises[idx].durationSec);
     setIsTimerRunning(false);
+    playSafeTap();
   };
 
   React.useEffect(() => {
@@ -48,7 +59,7 @@ export const CareHub = ({ lang = 'bn' }) => {
       interval = setInterval(() => setTimerSec(prev => prev - 1), 1000);
     } else if (timerSec === 0 && isTimerRunning) {
       setIsTimerRunning(false);
-      soundSynth.playGong();
+      try { soundSynth?.playGong?.(); } catch (e) {}
     }
     return () => clearInterval(interval);
   }, [isTimerRunning, timerSec]);
@@ -87,8 +98,8 @@ export const CareHub = ({ lang = 'bn' }) => {
           <button
             className={`care-subnav-btn ${activeSubTab === 'roadmap' ? 'active' : ''}`}
             onClick={() => {
-              soundSynth.playTap();
               setActiveSubTab('roadmap');
+              playSafeTap();
             }}
           >
             <div className="care-subnav-icon">
@@ -100,8 +111,8 @@ export const CareHub = ({ lang = 'bn' }) => {
           <button
             className={`care-subnav-btn ${activeSubTab === 'recipes' ? 'active' : ''}`}
             onClick={() => {
-              soundSynth.playTap();
               setActiveSubTab('recipes');
+              playSafeTap();
             }}
           >
             <div className="care-subnav-icon">
@@ -113,8 +124,8 @@ export const CareHub = ({ lang = 'bn' }) => {
           <button
             className={`care-subnav-btn ${activeSubTab === 'movement' ? 'active' : ''}`}
             onClick={() => {
-              soundSynth.playTap();
               setActiveSubTab('movement');
+              playSafeTap();
             }}
           >
             <div className="care-subnav-icon">
@@ -138,8 +149,8 @@ export const CareHub = ({ lang = 'bn' }) => {
                 <button
                   key={phase.id}
                   onClick={() => {
-                    soundSynth.playTap();
                     setActivePhase(phase.id);
+                    playSafeTap();
                   }}
                   className={`care-phase-btn ${isSelected ? 'selected' : ''}`}
                 >
@@ -246,8 +257,8 @@ export const CareHub = ({ lang = 'bn' }) => {
             <button
               className={`care-chip ${recipeCategory === 'all' ? 'active' : ''}`}
               onClick={() => {
-                soundSynth.playTap();
                 setRecipeCategory('all');
+                playSafeTap();
               }}
             >
               🌸 {lang === 'bn' ? 'সব খাবার ও চা' : 'All Foods & Teas'}
@@ -255,8 +266,8 @@ export const CareHub = ({ lang = 'bn' }) => {
             <button
               className={`care-chip ${recipeCategory === 'tea' ? 'active' : ''}`}
               onClick={() => {
-                soundSynth.playTap();
                 setRecipeCategory('tea');
+                playSafeTap();
               }}
             >
               🍵 {lang === 'bn' ? 'ঔষধি চা ও পানীয়' : 'Medicinal Teas'}
@@ -264,8 +275,8 @@ export const CareHub = ({ lang = 'bn' }) => {
             <button
               className={`care-chip ${recipeCategory === 'food' ? 'active' : ''}`}
               onClick={() => {
-                soundSynth.playTap();
                 setRecipeCategory('food');
+                playSafeTap();
               }}
             >
               🍲 {lang === 'bn' ? 'পুষ্টিকর দেশি খাবার' : 'Nourishing Meals'}
@@ -273,8 +284,8 @@ export const CareHub = ({ lang = 'bn' }) => {
             <button
               className={`care-chip ${recipeCategory === 'seed' ? 'active' : ''}`}
               onClick={() => {
-                soundSynth.playTap();
                 setRecipeCategory('seed');
+                playSafeTap();
               }}
             >
               🌱 {lang === 'bn' ? 'বীজ ও ভেষজ' : 'Seeds & Herbs'}
@@ -386,8 +397,8 @@ export const CareHub = ({ lang = 'bn' }) => {
               <button
                 className="btn-primary care-play-btn"
                 onClick={() => {
-                  soundSynth.playTap();
                   setIsTimerRunning(!isTimerRunning);
+                  playSafeTap();
                 }}
               >
                 {isTimerRunning ? <Pause size={18} /> : <Play size={18} />}
@@ -401,9 +412,9 @@ export const CareHub = ({ lang = 'bn' }) => {
               <button
                 className="btn-secondary care-reset-btn"
                 onClick={() => {
-                  soundSynth.playTap();
                   setIsTimerRunning(false);
                   setTimerSec(currentEx.durationSec);
+                  playSafeTap();
                 }}
                 title="Reset Timer"
               >
