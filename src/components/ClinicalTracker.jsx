@@ -275,10 +275,10 @@ export const ClinicalTracker = ({
 
         <div className="pain-rating-grid">
           {[
-            { level: 0, label: t.pain0, icon: '😊' },
-            { level: 3, label: t.pain3, icon: '😐' },
-            { level: 6, label: t.pain6, icon: '😣' },
-            { level: 9, label: t.pain9, icon: '😭' }
+            { level: 0, label: lang === 'bn' ? '০ কোনো ব্যথা নেই' : '0 No Pain', icon: '😊' },
+            { level: 3, label: lang === 'bn' ? '৩ হালকা টানটান' : '3 Mild Ache', icon: '😐' },
+            { level: 6, label: lang === 'bn' ? '৬ মাঝারি কষ্ট' : '6 Moderate', icon: '😣' },
+            { level: 9, label: lang === 'bn' ? '৯ তীব্র যন্ত্রণা' : '9 Severe Flare', icon: '😭' }
           ].map((item) => (
             <button
               key={item.level}
@@ -294,8 +294,8 @@ export const ClinicalTracker = ({
                 transition: 'var(--transition)'
               }}
             >
-              <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{item.icon}</div>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)' }}>{item.label}</div>
+              <div style={{ fontSize: '1.5rem', marginBottom: '0.2rem' }}>{item.icon}</div>
+              <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)' }}>{item.label}</div>
             </button>
           ))}
         </div>

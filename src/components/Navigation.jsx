@@ -8,13 +8,11 @@ import {
 import { translations } from '../data/translations';
 
 export const Navigation = ({ activeTab, setActiveTab, lang = 'bn' }) => {
-  const t = translations[lang] || translations.bn;
-
   const tabs = [
-    { id: 'today', label: t.navToday, icon: Sparkles },
-    { id: 'log', label: t.navLog, icon: ClipboardPenLine },
-    { id: 'care', label: t.navCare, icon: Leaf },
-    { id: 'report', label: t.navReport, icon: FileText }
+    { id: 'today', label: lang === 'bn' ? 'আজ' : 'Today', icon: Sparkles },
+    { id: 'log', label: lang === 'bn' ? 'লগ' : 'Daily Log', icon: ClipboardPenLine },
+    { id: 'care', label: lang === 'bn' ? 'নিরাময়' : 'Care Hub', icon: Leaf },
+    { id: 'report', label: lang === 'bn' ? 'রিপোর্ট' : 'Doctor Dossier', icon: FileText }
   ];
 
   return (
@@ -28,7 +26,7 @@ export const Navigation = ({ activeTab, setActiveTab, lang = 'bn' }) => {
             className={`nav-tab-btn ${isActive ? 'active' : ''}`}
             onClick={() => setActiveTab(tab.id)}
           >
-            <Icon size={17} />
+            <Icon size={19} />
             <span>{tab.label}</span>
           </button>
         );
