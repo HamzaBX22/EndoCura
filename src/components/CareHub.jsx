@@ -20,20 +20,23 @@ import { soundSynth } from '../utils/soundSynthesizer';
 export const CareHub = ({ lang = 'bn' }) => {
   const t = translations[lang] || translations.bn;
   const [activeSubTab, setActiveSubTab] = useState('roadmap'); // 'roadmap', 'recipes', 'movement'
-  const [activePhase, setActivePhase] = useState(2);
+  const [activePhase, setActivePhase] = useState(1);
   const [checkedTasks, setCheckedTasks] = useState({});
+  const [recipeCategory, setRecipeCategory] = useState('all'); // 'all', 'tea', 'food', 'seed'
 
   // Somatic Stretch Timer
   const [activeExIdx, setActiveExIdx] = useState(0);
-  const currentEx = somaticExercises[activeExIdx];
+  const currentEx = somaticExercises[activeExIdx] || somaticExercises[0];
   const [timerSec, setTimerSec] = useState(currentEx.durationSec);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
 
   const toggleTask = (key) => {
+    soundSynth.playTap();
     setCheckedTasks(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   const handleSelectEx = (idx) => {
+    soundSynth.playTap();
     setActiveExIdx(idx);
     setTimerSec(somaticExercises[idx].durationSec);
     setIsTimerRunning(false);
@@ -58,119 +61,171 @@ export const CareHub = ({ lang = 'bn' }) => {
 
   const selectedPhaseData = triadRemissionPhases.find(p => p.id === activePhase) || triadRemissionPhases[0];
 
+  // Calculate phase checklist completion
+  const checklist = lang === 'bn' ? selectedPhaseData.actionChecklistBn : selectedPhaseData.actionChecklistEn;
+  const completedCount = checklist.filter((_, idx) => checkedTasks[`${selectedPhaseData.id}-${idx}`]).length;
+  const progressPercent = Math.round((completedCount / checklist.length) * 100);
+
+  // Filtered recipes
+  const filteredFoods = recipeCategory === 'all'
+    ? deshiHealingFoods
+    : deshiHealingFoods.filter(f => f.category === recipeCategory);
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '850px', margin: '0 auto' }}>
-      {/* Soft Header */}
-      <div className="glass-card" style={{ textAlign: 'center', padding: '1.75rem 1.25rem' }}>
-        <h2 style={{ fontSize: '1.4rem', color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
+    <div className="care-hub-container">
+      {/* Soothing Header Card */}
+      <div className="glass-card care-hero-card">
+        <h2 className="care-hero-title">
           🌸 {t.careTitle}
         </h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
+        <p className="care-hero-subtitle">
           {t.careSub}
         </p>
 
-        {/* 3 Sub-Navigation Pills */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
+        {/* 3 Prominent Sub-Navigation Option Cards */}
+        <div className="care-subnav-row">
           <button
-            className={`tag-btn ${activeSubTab === 'roadmap' ? 'selected' : ''}`}
-            onClick={() => setActiveSubTab('roadmap')}
-            style={{ padding: '0.6rem 1.15rem', borderRadius: 'var(--radius-full)' }}
+            className={`care-subnav-btn ${activeSubTab === 'roadmap' ? 'active' : ''}`}
+            onClick={() => {
+              soundSynth.playTap();
+              setActiveSubTab('roadmap');
+            }}
           >
-            <Target size={15} style={{ display: 'inline', marginRight: '5px' }} />
-            {t.tabRoadmap}
+            <div className="care-subnav-icon">
+              <Target size={18} />
+            </div>
+            <span className="care-subnav-label">{t.tabRoadmap}</span>
           </button>
+
           <button
-            className={`tag-btn ${activeSubTab === 'recipes' ? 'selected' : ''}`}
-            onClick={() => setActiveSubTab('recipes')}
-            style={{ padding: '0.6rem 1.15rem', borderRadius: 'var(--radius-full)' }}
+            className={`care-subnav-btn ${activeSubTab === 'recipes' ? 'active' : ''}`}
+            onClick={() => {
+              soundSynth.playTap();
+              setActiveSubTab('recipes');
+            }}
           >
-            <Leaf size={15} style={{ display: 'inline', marginRight: '5px' }} />
-            {t.tabRecipes}
+            <div className="care-subnav-icon">
+              <Leaf size={18} />
+            </div>
+            <span className="care-subnav-label">{t.tabRecipes}</span>
           </button>
+
           <button
-            className={`tag-btn ${activeSubTab === 'movement' ? 'selected' : ''}`}
-            onClick={() => setActiveSubTab('movement')}
-            style={{ padding: '0.6rem 1.15rem', borderRadius: 'var(--radius-full)' }}
+            className={`care-subnav-btn ${activeSubTab === 'movement' ? 'active' : ''}`}
+            onClick={() => {
+              soundSynth.playTap();
+              setActiveSubTab('movement');
+            }}
           >
-            <Activity size={15} style={{ display: 'inline', marginRight: '5px' }} />
-            {t.tabMovement}
+            <div className="care-subnav-icon">
+              <Activity size={18} />
+            </div>
+            <span className="care-subnav-label">{t.tabMovement}</span>
           </button>
         </div>
       </div>
 
       {/* =========================================================
-          SUB-TAB 1: 4-PHASE REMISSION ROADMAP
+          SUB-TAB 1: ৪-ধাপের নিরাময় রোডম্যাপ (4-PHASE ROADMAP)
          ========================================================= */}
       {activeSubTab === 'roadmap' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {/* 4 Phase Tabs */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.65rem' }}>
+        <div className="care-section-fade">
+          {/* Phase Selector Grid - 2x2 on mobile, 4 columns on desktop */}
+          <div className="care-phase-grid">
             {triadRemissionPhases.map((phase) => {
               const isSelected = activePhase === phase.id;
               return (
                 <button
                   key={phase.id}
-                  onClick={() => setActivePhase(phase.id)}
-                  style={{
-                    padding: '0.85rem 0.5rem',
-                    borderRadius: 'var(--radius-md)',
-                    background: isSelected ? 'var(--accent-rose-soft)' : 'var(--bg-surface)',
-                    border: `1.5px solid ${isSelected ? 'var(--accent-rose)' : 'var(--border-subtle)'}`,
-                    textAlign: 'center',
-                    cursor: 'pointer',
-                    transition: 'var(--transition)'
+                  onClick={() => {
+                    soundSynth.playTap();
+                    setActivePhase(phase.id);
                   }}
+                  className={`care-phase-btn ${isSelected ? 'selected' : ''}`}
                 >
-                  <span style={{ fontSize: '0.72rem', color: isSelected ? 'var(--accent-rose)' : 'var(--text-muted)', fontWeight: 700, display: 'block' }}>
-                    {phase.duration}
-                  </span>
-                  <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)', display: 'block', marginTop: '0.2rem' }}>
+                  <span className="care-phase-badge">
                     {lang === 'bn' ? `ধাপ ${phase.id}` : `Phase ${phase.id}`}
+                  </span>
+                  <strong className="care-phase-duration">
+                    {phase.duration}
                   </strong>
+                  <span className="care-phase-short">
+                    {lang === 'bn'
+                      ? (phase.id === 1 ? 'রক্তক্ষরণ ও প্রদাহ' : phase.id === 2 ? 'ইনসুলিন ও থাইরয়েড' : phase.id === 3 ? 'ইস্ট্রোজেন ডিটক্স' : 'স্থায়ী সুস্থতা')
+                      : (phase.id === 1 ? 'Hemostasis' : phase.id === 2 ? 'Insulin & T3' : phase.id === 3 ? 'Estrogen Detox' : 'Remission')}
+                  </span>
                 </button>
               );
             })}
           </div>
 
-          {/* Phase Details Card */}
-          <div className="glass-card" style={{ borderLeft: '4px solid var(--accent-rose)' }}>
-            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
-              {lang === 'bn' ? selectedPhaseData.titleBn : selectedPhaseData.titleEn}
-            </h3>
-            <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+          {/* Active Phase Details Card */}
+          <div className="glass-card care-phase-detail-card">
+            {/* Header info */}
+            <div className="care-phase-header">
+              <div>
+                <span className="status-pill normal" style={{ fontSize: '0.72rem', fontWeight: 700 }}>
+                  {phaseSummaryTag(selectedPhaseData.id, lang)}
+                </span>
+                <h3 className="care-phase-title">
+                  {lang === 'bn' ? selectedPhaseData.titleBn : selectedPhaseData.titleEn}
+                </h3>
+              </div>
+            </div>
+
+            {/* Target Biomarkers */}
+            <div className="care-biomarker-pill">
+              <Sparkles size={16} color="var(--accent-teal)" style={{ flexShrink: 0 }} />
+              <span>
+                <strong>{lang === 'bn' ? 'ক্লিনিক্যাল লক্ষ্য:' : 'Clinical Target:'}</strong> {selectedPhaseData.targetBiomarker}
+              </span>
+            </div>
+
+            {/* Focus Text */}
+            <p className="care-phase-focus">
               {lang === 'bn' ? selectedPhaseData.focusBn : selectedPhaseData.focusEn}
             </p>
 
-            <h4 style={{ fontSize: '0.88rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.65rem' }}>
-              {lang === 'bn' ? 'এই ধাপের সহজ রুটিন' : 'Daily Checklist'}
-            </h4>
+            {/* Daily Checklist Progress */}
+            <div className="care-checklist-header">
+              <div className="care-checklist-progress-text">
+                <h4>
+                  {lang === 'bn' ? 'এই ধাপের সহজ দৈনন্দিন রুটিন' : 'Daily Phase Checklist'}
+                </h4>
+                <span className="care-progress-counter">
+                  {completedCount}/{checklist.length} {lang === 'bn' ? 'সম্পন্ন' : 'Done'} ({progressPercent}%)
+                </span>
+              </div>
+              <div className="care-progress-track">
+                <div
+                  className="care-progress-fill"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              {(lang === 'bn' ? selectedPhaseData.actionChecklistBn : selectedPhaseData.actionChecklistEn).map((item, idx) => {
+            {/* Interactive Checklist Cards */}
+            <div className="care-checklist-items">
+              {checklist.map((item, idx) => {
                 const k = `${selectedPhaseData.id}-${idx}`;
                 const isDone = checkedTasks[k] || false;
                 return (
                   <div
                     key={idx}
                     onClick={() => toggleTask(k)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.75rem',
-                      padding: '0.85rem 1rem',
-                      borderRadius: 'var(--radius-md)',
-                      background: isDone ? 'var(--accent-teal-soft)' : 'var(--bg-surface-elevated)',
-                      border: `1px solid ${isDone ? 'var(--accent-teal)' : 'var(--border-subtle)'}`,
-                      cursor: 'pointer',
-                      transition: 'var(--transition)'
-                    }}
+                    className={`care-task-card ${isDone ? 'done' : ''}`}
+                    role="checkbox"
+                    aria-checked={isDone}
+                    tabIndex={0}
                   >
-                    {isDone ? (
-                      <CheckCircle2 size={18} color="var(--accent-teal)" />
-                    ) : (
-                      <Circle size={18} color="var(--text-muted)" />
-                    )}
-                    <span style={{ fontSize: '0.88rem', color: isDone ? 'var(--text-primary)' : 'var(--text-secondary)', textDecoration: isDone ? 'line-through' : 'none' }}>
+                    <div className="care-task-checkbox">
+                      {isDone ? (
+                        <CheckCircle2 size={20} color="var(--accent-teal)" />
+                      ) : (
+                        <Circle size={20} color="var(--text-muted)" />
+                      )}
+                    </div>
+                    <span className="care-task-label">
                       {item}
                     </span>
                   </div>
@@ -182,140 +237,209 @@ export const CareHub = ({ lang = 'bn' }) => {
       )}
 
       {/* =========================================================
-          SUB-TAB 2: DESHI HEALING FOODS
+          SUB-TAB 2: দেশি পুষ্টিকর খাবার ও চা (FOODS & HEALING TEAS)
          ========================================================= */}
       {activeSubTab === 'recipes' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
-          {deshiHealingFoods.map((food, idx) => (
-            <div key={idx} className="glass-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                  <h4 style={{ fontSize: '1.05rem', color: 'var(--text-primary)' }}>
-                    {lang === 'bn' ? food.nameBn : food.nameEn}
-                  </h4>
-                  <span className="status-pill normal" style={{ fontSize: '0.7rem' }}>
-                    {food.target}
-                  </span>
-                </div>
-                <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: '0.65rem 0' }}>
-                  {lang === 'bn' ? food.benefitBn : food.benefitEn}
-                </p>
-              </div>
+        <div className="care-section-fade">
+          {/* Category Filter Chips */}
+          <div className="care-filter-chips">
+            <button
+              className={`care-chip ${recipeCategory === 'all' ? 'active' : ''}`}
+              onClick={() => {
+                soundSynth.playTap();
+                setRecipeCategory('all');
+              }}
+            >
+              🌸 {lang === 'bn' ? 'সব খাবার ও চা' : 'All Foods & Teas'}
+            </button>
+            <button
+              className={`care-chip ${recipeCategory === 'tea' ? 'active' : ''}`}
+              onClick={() => {
+                soundSynth.playTap();
+                setRecipeCategory('tea');
+              }}
+            >
+              🍵 {lang === 'bn' ? 'ঔষধি চা ও পানীয়' : 'Medicinal Teas'}
+            </button>
+            <button
+              className={`care-chip ${recipeCategory === 'food' ? 'active' : ''}`}
+              onClick={() => {
+                soundSynth.playTap();
+                setRecipeCategory('food');
+              }}
+            >
+              🍲 {lang === 'bn' ? 'পুষ্টিকর দেশি খাবার' : 'Nourishing Meals'}
+            </button>
+            <button
+              className={`care-chip ${recipeCategory === 'seed' ? 'active' : ''}`}
+              onClick={() => {
+                soundSynth.playTap();
+                setRecipeCategory('seed');
+              }}
+            >
+              🌱 {lang === 'bn' ? 'বীজ ও ভেষজ' : 'Seeds & Herbs'}
+            </button>
+          </div>
 
-              <div style={{ background: 'var(--bg-surface-soft)', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem', color: 'var(--accent-rose)', fontWeight: 600 }}>
-                {food.usage}
+          {/* Foods & Teas Grid (1 col on mobile, 2 col on desktop) */}
+          <div className="care-foods-grid">
+            {filteredFoods.map((food, idx) => (
+              <div key={food.id || idx} className="glass-card care-food-card">
+                <div>
+                  <div className="care-food-top">
+                    <div>
+                      <h4 className="care-food-name">
+                        {lang === 'bn' ? food.nameBn : food.nameEn}
+                      </h4>
+                      <div className="care-food-subname">
+                        {lang === 'bn' ? food.nameEn : food.nameBn}
+                      </div>
+                    </div>
+                    <span className="status-pill normal care-food-tag">
+                      {food.target}
+                    </span>
+                  </div>
+
+                  <p className="care-food-benefit">
+                    {lang === 'bn' ? food.benefitBn : food.benefitEn}
+                  </p>
+                </div>
+
+                {/* Usage instruction highlight */}
+                <div className="care-food-usage">
+                  <span className="care-usage-title">
+                    💡 {lang === 'bn' ? 'খাওয়ার নিয়ম ও পরিমাণ:' : 'How & When to Consume:'}
+                  </span>
+                  <div className="care-usage-desc">
+                    {food.usage}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
       {/* =========================================================
-          SUB-TAB 3: GENTLE MOVEMENT & SOMATIC RELAXATION (BENGALI)
+          SUB-TAB 3: সহজ রিল্যাক্সিং ব্যায়াম (GENTLE SOMATICS & ZEN TIMER)
          ========================================================= */}
       {activeSubTab === 'movement' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '1.25rem' }}>
-            {/* Active Timer Card */}
-            <div className="glass-card" style={{ textAlign: 'center', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <span className="status-pill normal" style={{ marginBottom: '0.65rem' }}>
-                {lang === 'bn' ? currentEx.difficultyBn : currentEx.difficulty}
-              </span>
-              <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', marginBottom: '0.3rem' }}>
-                {lang === 'bn' ? currentEx.titleBn : currentEx.title}
-              </h3>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', maxWidth: '380px', marginBottom: '1.5rem' }}>
-                {lang === 'bn' ? currentEx.recommendedWhenBn : currentEx.recommendedWhen}
-              </p>
-
-              {/* Circular Timer */}
-              <div
-                style={{
-                  width: '160px',
-                  height: '160px',
-                  borderRadius: '50%',
-                  border: '4px solid var(--accent-rose)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'var(--accent-rose-soft)',
-                  boxShadow: isTimerRunning ? '0 0 25px rgba(255, 101, 132, 0.3)' : 'none',
-                  marginBottom: '1.5rem'
-                }}
-              >
-                <span style={{ fontSize: '2.5rem', fontFamily: 'var(--font-mono)', fontWeight: 800, color: 'var(--accent-rose)' }}>
-                  {formatTime(timerSec)}
-                </span>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-                  {isTimerRunning ? (lang === 'bn' ? 'চলছে...' : 'Active') : (lang === 'bn' ? 'প্রস্তুত' : 'Ready')}
-                </span>
-              </div>
-
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <button
-                  className="btn-primary"
-                  onClick={() => setIsTimerRunning(!isTimerRunning)}
-                  style={{ minWidth: '110px' }}
-                >
-                  {isTimerRunning ? <Pause size={16} /> : <Play size={16} />}
-                  <span>{isTimerRunning ? (lang === 'bn' ? 'থামান' : 'Pause') : (lang === 'bn' ? 'শুরু করুন' : 'Start')}</span>
-                </button>
-                <button
-                  className="btn-secondary"
-                  onClick={() => {
-                    setIsTimerRunning(false);
-                    setTimerSec(currentEx.durationSec);
-                  }}
-                >
-                  <RotateCcw size={16} />
-                  <span>{lang === 'bn' ? 'রিসেট' : 'Reset'}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* List of Stretches */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              {somaticExercises.map((ex, idx) => (
-                <div
-                  key={ex.id}
-                  onClick={() => handleSelectEx(idx)}
-                  style={{
-                    padding: '1rem',
-                    borderRadius: 'var(--radius-md)',
-                    background: activeExIdx === idx ? 'var(--accent-rose-soft)' : 'var(--bg-surface)',
-                    border: `1.5px solid ${activeExIdx === idx ? 'var(--accent-rose)' : 'var(--border-subtle)'}`,
-                    cursor: 'pointer',
-                    transition: 'var(--transition)'
-                  }}
-                >
-                  <strong style={{ fontSize: '0.9rem', color: 'var(--text-primary)', display: 'block' }}>
-                    {lang === 'bn' ? ex.titleBn : ex.title}
-                  </strong>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    {formatTime(ex.durationSec)} • {lang === 'bn' ? ex.focusAreaBn : ex.focusArea}
-                  </span>
-                </div>
-              ))}
+        <div className="care-section-fade care-movement-flow">
+          {/* Exercise Selector Strip */}
+          <div className="care-exercise-selector">
+            <span className="care-exercise-hint">
+              🧘‍♀️ {lang === 'bn' ? 'যেকোনো একটি আসন বা রিল্যাক্সেশন বেছে নিন:' : 'Select a gentle posture or practice:'}
+            </span>
+            <div className="care-exercise-pills-row">
+              {somaticExercises.map((ex, idx) => {
+                const isSelected = activeExIdx === idx;
+                const emoji = idx === 0 ? '🦋' : idx === 1 ? '👶' : idx === 2 ? '🦵' : idx === 3 ? '🌸' : '🌬️';
+                return (
+                  <button
+                    key={ex.id}
+                    onClick={() => handleSelectEx(idx)}
+                    className={`care-exercise-pill-btn ${isSelected ? 'active' : ''}`}
+                  >
+                    <span className="care-ex-emoji">{emoji}</span>
+                    <div className="care-ex-meta">
+                      <strong className="care-ex-title">
+                        {lang === 'bn' ? ex.titleBn.split('(')[0] : ex.title.split('(')[0]}
+                      </strong>
+                      <span className="care-ex-time">
+                        {formatTime(ex.durationSec)} • {lang === 'bn' ? ex.difficultyBn : ex.difficulty}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Active Exercise Guidance & Clinical Benefit in Bengali */}
-          <div className="glass-card" style={{ borderLeft: '4px solid var(--accent-teal)' }}>
-            <h4 style={{ fontSize: '0.95rem', color: 'var(--text-primary)', marginBottom: '0.65rem' }}>
-              {lang === 'bn' ? 'সহজ ধাপে ধাপে আসন করার নিয়ম' : 'Step-by-Step Guidance'}
-            </h4>
-            <ol style={{ paddingLeft: '1.25rem', fontSize: '0.86rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.45rem', lineHeight: 1.5 }}>
-              {(lang === 'bn' ? currentEx.guidanceBn : currentEx.guidance).map((step, idx) => (
-                <li key={idx}>{step}</li>
-              ))}
-            </ol>
+          {/* Interactive Zen Breathing & Stretch Timer Card */}
+          <div className="glass-card care-timer-card">
+            <span className="status-pill normal" style={{ marginBottom: '0.4rem', fontSize: '0.75rem', fontWeight: 600 }}>
+              {lang === 'bn' ? currentEx.difficultyBn : currentEx.difficulty}
+            </span>
 
-            <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', background: 'var(--bg-surface-soft)', fontSize: '0.82rem', color: 'var(--accent-rose)', fontWeight: 600 }}>
-              💡 {lang === 'bn' ? 'শারীরিক উপকারিতা:' : 'Clinical Benefit:'}{' '}
-              <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>
-                {lang === 'bn' ? currentEx.clinicalBenefitBn : currentEx.clinicalBenefit}
+            <h3 className="care-active-ex-name">
+              {lang === 'bn' ? currentEx.titleBn : currentEx.title}
+            </h3>
+
+            <p className="care-active-ex-when">
+              {lang === 'bn' ? currentEx.recommendedWhenBn : currentEx.recommendedWhen}
+            </p>
+
+            {/* Circular Zen Breath Timer */}
+            <div className={`care-zen-ring ${isTimerRunning ? 'pulsing' : ''}`}>
+              <span className="care-zen-digits">
+                {formatTime(timerSec)}
               </span>
+              <span className="care-zen-state">
+                {isTimerRunning
+                  ? (lang === 'bn' ? 'চলছে • শান্ত শ্বাস নিন' : 'Active • Breathe Gently')
+                  : (lang === 'bn' ? 'প্রস্তুত' : 'Ready')}
+              </span>
+            </div>
+
+            {/* Play/Pause/Reset Controls */}
+            <div className="care-timer-actions">
+              <button
+                className="btn-primary care-play-btn"
+                onClick={() => {
+                  soundSynth.playTap();
+                  setIsTimerRunning(!isTimerRunning);
+                }}
+              >
+                {isTimerRunning ? <Pause size={18} /> : <Play size={18} />}
+                <span>
+                  {isTimerRunning
+                    ? (lang === 'bn' ? 'সাময়িক থামান' : 'Pause')
+                    : (lang === 'bn' ? 'অনুশীলন শুরু করুন' : 'Begin Practice')}
+                </span>
+              </button>
+
+              <button
+                className="btn-secondary care-reset-btn"
+                onClick={() => {
+                  soundSynth.playTap();
+                  setIsTimerRunning(false);
+                  setTimerSec(currentEx.durationSec);
+                }}
+                title="Reset Timer"
+              >
+                <RotateCcw size={16} />
+                <span>{lang === 'bn' ? 'রিসেট' : 'Reset'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Step-by-Step Guidance Card */}
+          <div className="glass-card care-guidance-card">
+            <h4 className="care-guidance-heading">
+              📋 {lang === 'bn' ? 'সহজ ধাপে ধাপে আসন করার নিয়ম' : 'Step-by-Step Gentle Guidance'}
+            </h4>
+
+            <div className="care-steps-list">
+              {(lang === 'bn' ? currentEx.guidanceBn : currentEx.guidance).map((step, idx) => (
+                <div key={idx} className="care-step-item">
+                  <div className="care-step-number">
+                    {lang === 'bn' ? toBengaliNum(idx + 1) : idx + 1}
+                  </div>
+                  <p className="care-step-text">
+                    {step}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Clinical Benefit Highlight */}
+            <div className="care-benefit-box">
+              <span className="care-benefit-badge">
+                💡 {lang === 'bn' ? 'শারীরিক উপকারিতা:' : 'Clinical Benefit:'}
+              </span>
+              <p className="care-benefit-desc">
+                {lang === 'bn' ? currentEx.clinicalBenefitBn : currentEx.clinicalBenefit}
+              </p>
             </div>
           </div>
         </div>
@@ -323,3 +447,29 @@ export const CareHub = ({ lang = 'bn' }) => {
     </div>
   );
 };
+
+// Helper function for Bengali summary tags
+function phaseSummaryTag(phaseId, lang) {
+  if (lang === 'bn') {
+    switch (phaseId) {
+      case 1: return '১ম মাস • রক্তক্ষরণ ও অন্ত্রের সুস্থতা';
+      case 2: return 'মাস ২-৩ • ইনসুলিন ও থাইরয়েড গতি';
+      case 3: return 'মাস ৩-৬ • ইস্ট্রোজেন ডিটক্স ও ওভুলেশন';
+      case 4: return 'মাস ৬+ • স্থায়ী সুস্থতা ও ব্যথাহীন জীবন';
+      default: return 'আরোগ্য পর্যায়';
+    }
+  }
+  switch (phaseId) {
+    case 1: return 'Month 1 • Bleeding & Gut Healing';
+    case 2: return 'Month 2-3 • Insulin & Thyroid Velocity';
+    case 3: return 'Month 3-6 • Estrogen Detox & Ovulation';
+    case 4: return 'Month 6+ • Sustained Remission';
+    default: return 'Care Phase';
+  }
+}
+
+// Helper to convert numbers to Bengali numerals
+function toBengaliNum(n) {
+  const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+  return String(n).replace(/\d/g, d => bnDigits[Number(d)]);
+}

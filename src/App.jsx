@@ -95,13 +95,6 @@ export function App() {
 
       {/* Main Content Area */}
       <main className="main-content">
-        {/* Streamlined 4-Tab Navigation */}
-        <Navigation
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          lang={lang}
-        />
-
         {/* 1. Today Dashboard */}
         {activeTab === 'today' && (
           <Dashboard
@@ -150,6 +143,13 @@ export function App() {
           />
         )}
       </main>
+
+      {/* Primary Bottom Navigation Bar */}
+      <Navigation
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        lang={lang}
+      />
 
       {/* Emergency Pain SOS Modal */}
       <PainSOSModal

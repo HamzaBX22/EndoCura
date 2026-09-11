@@ -157,6 +157,8 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
 /* Anti-Squish & SVG Protection */
 svg {
   flex-shrink: 0;
@@ -211,46 +213,99 @@ svg {
   flex-shrink: 0;
 }
 
-/* Simplified 4-Tab Navigation */
+/* Primary Application Navigation Dock */
 .nav-tab-bar {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 35px rgba(220, 130, 160, 0.18), 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 0.35rem 0.5rem;
+  max-width: 620px;
+  width: calc(100% - 2rem);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme='dark'] .nav-tab-bar {
+  background: rgba(33, 25, 35, 0.94);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+}
+
+.nav-tab-inner {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  padding: 0.4rem 0.5rem;
-  background: var(--bg-surface);
-  border-radius: var(--radius-full);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-subtle);
-  margin: 0 auto 1.75rem auto;
-  max-width: 680px;
+  justify-content: space-around;
   width: 100%;
 }
 
 .nav-tab-btn {
   flex: 1;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  padding: 0.65rem 0.85rem;
+  gap: 0.2rem;
+  padding: 0.5rem 0.35rem;
   border-radius: var(--radius-full);
   color: var(--text-secondary);
-  font-size: 0.88rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: var(--transition);
+  position: relative;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.nav-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-tab-text {
+  font-size: 0.74rem;
   font-weight: 600;
   white-space: nowrap;
-  transition: var(--transition);
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
 }
 
 .nav-tab-btn:hover {
   color: var(--accent-rose);
-  background: var(--bg-surface-soft);
+}
+
+.nav-tab-btn:hover .nav-icon-wrapper {
+  transform: translateY(-2px);
 }
 
 .nav-tab-btn.active {
-  color: #ffffff;
-  background: linear-gradient(135deg, #ff6584, #ff8597);
-  box-shadow: var(--shadow-rose);
+  color: var(--accent-rose);
+  font-weight: 700;
+}
+
+.nav-tab-btn.active .nav-icon-wrapper {
+  transform: scale(1.18);
+  color: var(--accent-rose);
+  filter: drop-shadow(0 2px 8px rgba(255, 101, 132, 0.4));
+}
+
+.nav-active-indicator {
+  position: absolute;
+  bottom: 2px;
+  width: 18px;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: var(--accent-rose);
+  box-shadow: 0 1px 6px rgba(255, 101, 132, 0.6);
 }
 
 /* Soft Cards */
@@ -451,13 +506,626 @@ svg {
   gap: 1rem;
 }
 
-/* Mobile Responsiveness & Native App Experience */
-.status-cards-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.85rem;
+/* =========================================================
+   CARE & HEALING HUB STYLES
+   ========================================================= */
+.care-hub-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
 }
 
+.care-hero-card {
+  text-align: center;
+  padding: 1.6rem 1.25rem;
+}
+
+.care-hero-title {
+  font-size: 1.35rem;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.care-hero-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.care-subnav-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+.care-subnav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.85rem 0.5rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+
+.care-subnav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-surface-soft);
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.care-subnav-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.care-subnav-btn:hover {
+  border-color: var(--accent-rose);
+  color: var(--accent-rose);
+}
+
+.care-subnav-btn:hover .care-subnav-icon {
+  color: var(--accent-rose);
+  background: var(--accent-rose-soft);
+}
+
+.care-subnav-btn.active {
+  background: var(--accent-rose-soft);
+  border-color: var(--accent-rose);
+  color: var(--accent-rose);
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(255, 101, 132, 0.18);
+}
+
+.care-subnav-btn.active .care-subnav-icon {
+  background: var(--accent-rose);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(255, 101, 132, 0.35);
+}
+
+.care-section-fade {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Phase Selector Grid */
+.care-phase-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.care-phase-btn {
+  padding: 0.85rem 0.6rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-subtle);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.care-phase-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.care-phase-duration {
+  font-size: 0.84rem;
+  color: var(--text-primary);
+  display: block;
+}
+
+.care-phase-short {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.care-phase-btn:hover {
+  border-color: var(--accent-rose);
+}
+
+.care-phase-btn.selected {
+  background: var(--accent-rose-soft);
+  border-color: var(--accent-rose);
+  box-shadow: 0 4px 18px rgba(255, 101, 132, 0.18);
+}
+
+.care-phase-btn.selected .care-phase-badge {
+  color: var(--accent-rose);
+}
+
+/* Phase Detail Card */
+.care-phase-detail-card {
+  border-left: 4px solid var(--accent-rose);
+  padding: 1.5rem 1.35rem;
+}
+
+.care-phase-header {
+  margin-bottom: 0.6rem;
+}
+
+.care-phase-title {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin-top: 0.35rem;
+}
+
+.care-biomarker-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent-teal-soft);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.85rem;
+  font-size: 0.82rem;
+  color: var(--accent-teal);
+  margin: 0.85rem 0;
+  line-height: 1.4;
+}
+
+.care-phase-focus {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+}
+
+.care-checklist-header {
+  margin-bottom: 0.85rem;
+}
+
+.care-checklist-progress-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.45rem;
+}
+
+.care-checklist-progress-text h4 {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.care-progress-counter {
+  font-size: 0.78rem;
+  color: var(--accent-rose);
+  font-weight: 700;
+}
+
+.care-progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-surface-soft);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.care-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-rose), var(--accent-teal));
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+.care-checklist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.care-task-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-elevated);
+  border: 1.5px solid var(--border-subtle);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.care-task-card:hover {
+  border-color: var(--accent-rose);
+}
+
+.care-task-card.done {
+  background: var(--accent-teal-soft);
+  border-color: var(--accent-teal);
+}
+
+.care-task-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.care-task-label {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+  transition: var(--transition);
+}
+
+.care-task-card.done .care-task-label {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* Category Filter Chips */
+.care-filter-chips {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.care-chip {
+  white-space: nowrap;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.care-chip:hover {
+  border-color: var(--accent-rose);
+  color: var(--accent-rose);
+}
+
+.care-chip.active {
+  background: var(--accent-rose);
+  color: #ffffff;
+  border-color: var(--accent-rose);
+  box-shadow: 0 2px 10px rgba(255, 101, 132, 0.35);
+}
+
+/* Foods Grid */
+.care-foods-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.care-food-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  transition: var(--transition);
+}
+
+.care-food-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.care-food-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.care-food-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.care-food-subname {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.care-food-tag {
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.care-food-benefit {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0.65rem 0 1rem 0;
+}
+
+.care-food-usage {
+  background: var(--bg-surface-soft);
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--accent-rose);
+}
+
+.care-usage-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-rose);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.care-usage-desc {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  line-height: 1.45;
+}
+
+/* Somatic & Zen Movement Flow */
+.care-movement-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.care-exercise-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.care-exercise-hint {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.care-exercise-pills-row {
+  display: flex;
+  gap: 0.65rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.care-exercise-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-surface);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.care-exercise-pill-btn:hover {
+  border-color: var(--accent-rose);
+}
+
+.care-exercise-pill-btn.active {
+  background: var(--accent-rose-soft);
+  border-color: var(--accent-rose);
+  box-shadow: 0 4px 15px rgba(255, 101, 132, 0.15);
+}
+
+.care-ex-emoji {
+  font-size: 1.25rem;
+}
+
+.care-ex-meta {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.care-ex-title {
+  font-size: 0.84rem;
+  color: var(--text-primary);
+}
+
+.care-ex-time {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* Zen Timer Card */
+.care-timer-card {
+  text-align: center;
+  padding: 2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.care-active-ex-name {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.care-active-ex-when {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  max-width: 420px;
+  line-height: 1.45;
+  margin-bottom: 1.5rem;
+}
+
+.care-zen-ring {
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  border: 4px solid var(--accent-rose);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-rose-soft);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 20px rgba(255, 101, 132, 0.2);
+  transition: all 0.3s ease;
+}
+
+.care-zen-ring.pulsing {
+  animation: zenAura 4s infinite ease-in-out;
+}
+
+@keyframes zenAura {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 101, 132, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(255, 101, 132, 0.6);
+  }
+}
+
+.care-zen-digits {
+  font-size: 2.6rem;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  color: var(--accent-rose);
+  line-height: 1;
+}
+
+.care-zen-state {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-top: 0.35rem;
+  font-weight: 600;
+}
+
+.care-timer-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.care-play-btn {
+  min-width: 140px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.care-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+/* Guidance Card */
+.care-guidance-card {
+  border-left: 4px solid var(--accent-teal);
+  padding: 1.5rem 1.35rem;
+}
+
+.care-guidance-heading {
+  font-size: 0.98rem;
+  color: var(--text-primary);
+  margin-bottom: 0.85rem;
+}
+
+.care-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.care-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.care-step-number {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 50%;
+  background: var(--accent-teal-soft);
+  color: var(--accent-teal);
+  font-weight: 700;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.care-step-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.care-benefit-box {
+  margin-top: 1.15rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface-soft);
+  border-left: 3px solid var(--accent-teal);
+}
+
+.care-benefit-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-teal);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.care-benefit-desc {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* =========================================================
+   MOBILE RESPONSIVENESS & NATIVE APP EXPERIENCE (< 768px)
+   ========================================================= */
 @media (max-width: 768px) {
   /* Native Mobile Bottom App Navigation Bar */
   .nav-tab-bar {
@@ -465,9 +1133,10 @@ svg {
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
+    transform: none !important;
     width: 100% !important;
     max-width: 100% !important;
-    height: 62px !important;
+    height: 64px !important;
     margin: 0 !important;
     border-radius: 0 !important;
     border-top: 1px solid var(--border-subtle) !important;
@@ -481,13 +1150,19 @@ svg {
     z-index: 1000 !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: space-around !important;
-    padding: 0.2rem 0.5rem calc(env(safe-area-inset-bottom, 0px) + 0.2rem) 0.5rem !important;
+    justify-content: center !important;
+    padding: 0.15rem 0.25rem calc(env(safe-area-inset-bottom, 0px) + 0.15rem) 0.25rem !important;
   }
 
   [data-theme='dark'] .nav-tab-bar {
     background: rgba(33, 25, 34, 0.96) !important;
     border-top-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .nav-tab-inner {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-around !important;
   }
 
   .nav-tab-btn {
@@ -497,23 +1172,26 @@ svg {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 0.18rem !important;
-    padding: 0.35rem 0.2rem !important;
+    gap: 0.12rem !important;
+    padding: 0.35rem 0.1rem !important;
     background: transparent !important;
-    border-radius: var(--radius-sm) !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
     color: var(--text-muted) !important;
-    font-size: 0.72rem !important;
-    font-weight: 600 !important;
     border: none !important;
     transition: var(--transition) !important;
   }
 
-  .nav-tab-btn svg {
+  .nav-icon-wrapper svg {
     width: 20px !important;
     height: 20px !important;
     flex-shrink: 0 !important;
-    transition: transform 0.2s ease !important;
+  }
+
+  .nav-tab-text {
+    font-size: 0.67rem !important;
+    max-width: 82px !important;
+    letter-spacing: -0.01em !important;
   }
 
   .nav-tab-btn.active {
@@ -523,19 +1201,25 @@ svg {
     font-weight: 800 !important;
   }
 
-  .nav-tab-btn.active svg {
+  .nav-tab-btn.active .nav-icon-wrapper {
     color: var(--accent-rose) !important;
     transform: scale(1.15) !important;
     filter: drop-shadow(0 2px 6px rgba(255, 101, 132, 0.35)) !important;
   }
 
-  /* Content area clearance on mobile */
+  .nav-active-indicator {
+    bottom: 2px !important;
+    width: 14px !important;
+    height: 3px !important;
+  }
+
+  /* Content area clearance on mobile: 95px so bottom dock never overlaps */
   .main-content {
-    padding: 0.85rem 0.75rem 88px 0.75rem !important;
+    padding: 0.85rem 0.75rem 95px 0.75rem !important;
   }
 
   footer.no-print {
-    padding: 1.5rem 1rem 88px 1rem !important;
+    padding: 1.5rem 1rem 95px 1rem !important;
   }
 
   /* Header Optimization */
@@ -547,7 +1231,7 @@ svg {
   }
 
   .header-inner {
-    gap: 0.4rem !important;
+    gap: 0.35rem !important;
   }
 
   .logo-group {
@@ -555,14 +1239,14 @@ svg {
   }
 
   .logo-badge {
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    min-height: 34px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
   }
 
   .brand-title {
-    font-size: 1.1rem !important;
+    font-size: 1.05rem !important;
   }
 
   .brand-subtitle {
@@ -575,6 +1259,69 @@ svg {
 
   .hide-on-mobile {
     display: none !important;
+  }
+
+  /* CareHub on Mobile */
+  .care-subnav-row {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.35rem !important;
+  }
+
+  .care-subnav-btn {
+    padding: 0.55rem 0.2rem !important;
+    border-radius: var(--radius-sm) !important;
+    gap: 0.2rem !important;
+  }
+
+  .care-subnav-label {
+    font-size: 0.7rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .care-subnav-icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .care-subnav-icon svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .care-phase-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.55rem !important;
+  }
+
+  .care-phase-btn {
+    padding: 0.65rem 0.4rem !important;
+  }
+
+  .care-phase-duration {
+    font-size: 0.78rem !important;
+  }
+
+  .care-foods-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
+  }
+
+  .care-exercise-pills-row {
+    gap: 0.45rem !important;
+  }
+
+  .care-exercise-pill-btn {
+    padding: 0.5rem 0.65rem !important;
+  }
+
+  .care-zen-ring {
+    width: 150px !important;
+    height: 150px !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .care-zen-digits {
+    font-size: 2.2rem !important;
   }
 
   /* Glass Card on Mobile */

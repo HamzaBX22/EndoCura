@@ -87,6 +87,9 @@ export const triadRemissionPhases = [
 
 export const deshiHealingFoods = [
   {
+    id: 'food-1',
+    category: 'seed',
+    categoryBn: 'বীজ ও ভেষজ',
     nameEn: 'Freshly Ground Golden Flaxseed (তিসি গুঁড়া)',
     nameBn: 'কাঁচা সোনালী তিসি গুঁড়া (Flaxseed)',
     target: 'ইস্ট্রোজেন ও থাইরয়েড ব্যালান্স',
@@ -95,6 +98,31 @@ export const deshiHealingFoods = [
     usage: '১ টেবিল চামচ হালকা গরম পানিতে বা সালাদে মিশিয়ে প্রতিদিন সকালে।'
   },
   {
+    id: 'food-2',
+    category: 'tea',
+    categoryBn: 'ঔষধি চা ও পানীয়',
+    nameEn: 'Spearmint Herbal Tea (স্পিয়ারমিন্ট চা)',
+    nameBn: 'স্পিয়ারমিন্ট চা (Spearmint Tea)',
+    target: 'টেস্টোস্টেরন হ্রাস ও অবাঞ্ছিত লোম রোধ',
+    benefitEn: 'Clinically proven to reduce free testosterone in women with PCOS, reducing hirsutism, cystic acne, and ovarian androgens.',
+    benefitBn: 'ক্লিনিক্যাল গবেষণায় প্রমাণিত যে দিনে ২ কাপ স্পিয়ারমিন্ট চা পিসিওএস নারীদের অতিরিক্ত পুরুষ হরমোন (টেস্টোস্টেরন) কমায় এবং মুখের অবাঞ্ছিত লোম ও ব্রণ দূর করে।',
+    usage: '১ চামচ শুকনা স্পিয়ারমিন্ট পাতা ফুটন্ত পানিতে ৫ মিনিট ভিজিয়ে রেখে দিনে ২ বার পান করুন।'
+  },
+  {
+    id: 'food-3',
+    category: 'tea',
+    categoryBn: 'ঔষধি চা ও পানীয়',
+    nameEn: 'Fresh Ginger & Turmeric Infusion (আদা-হলুদ নিরাময় চা)',
+    nameBn: 'কাঁচা আদা ও হলুদ চা (Ginger-Turmeric Brew)',
+    target: 'জরায়ুর ব্যথা ও বড় চাকা পড়া রোধ',
+    benefitEn: 'Potent natural COX-2 inhibitor that shuts down inflammatory prostaglandins responsible for excruciating adenomyosis cramps and uterine spasms.',
+    benefitBn: 'কাঁচা আদার জিঞ্জেরল এবং হলুদের কারকিউমিন শক্তিশালী প্রাকৃতিক ব্যথানাশক। এটি পিরিয়ডের আগের তীব্র তলপেট মোচড়ানো ব্যথা ও বড় চাকা পড়া প্রতিরোধ করে।',
+    usage: 'পিরিয়ড শুরুর ৩ দিন আগে থেকে ১ টুকরো কাঁচা আদা ও কাঁচা হলুদ ছেঁচে সামান্য গোলমরিচ দিয়ে ফুটিয়ে পান করুন।'
+  },
+  {
+    id: 'food-4',
+    category: 'seed',
+    categoryBn: 'বীজ ও ভেষজ',
     nameEn: 'Fenugreek Seed Water (মেথি ভেজানো পানি)',
     nameBn: 'মেথি ভেজানো পানি (Fenugreek Water)',
     target: 'পিসিওএস ও ইনসুলিন রেজিস্ট্যান্স',
@@ -103,7 +131,10 @@ export const deshiHealingFoods = [
     usage: '১ চা চামচ মেথি রাতে এক গ্লাস পানিতে ভিজিয়ে রেখে সকালে ছেঁকে খালি পেটে পান করা।'
   },
   {
-    nameEn: 'Small Indigenous Fish Broth (ছোট দেশি কাচকি/মলা মাছের ঝোল)',
+    id: 'food-5',
+    category: 'food',
+    categoryBn: 'পুষ্টিকর খাবার',
+    nameEn: 'Small Indigenous Fish Broth (ছোট দেশি মাছের ঝোল)',
     nameBn: 'ছোট দেশি মাছের পাতলা ঝোল (কাচকি/মলা/মৌরলা)',
     target: 'অ্যাডিনোমায়োসিস রক্তস্বল্পতা ও হাড়ের পুষ্টি',
     benefitEn: 'Rich in bioavailable intact bone calcium, zinc, and DHA omega-3 fatty acids without toxic heavy metals. Replenishes menstrual blood loss.',
@@ -111,11 +142,25 @@ export const deshiHealingFoods = [
     usage: 'হালকা জিরা ও হলুদ দিয়ে কম তেলে সপ্তাহে ৩-৪ দিন রান্না করে খাওয়া।'
   },
   {
-    nameEn: 'Steamed Bottle Gourd & Spinach (লাউ ও পালং শাকের তরকারি)',
+    id: 'food-6',
+    category: 'tea',
+    categoryBn: 'ঔষধি চা ও পানীয়',
+    nameEn: 'Ceylon Cinnamon Warm Infusion (সিলন দারুচিনি পানি)',
+    nameBn: 'খাঁটি দারুচিনি চা (Ceylon Cinnamon Brew)',
+    target: 'ওভুলেশন নিয়মিত ও মিষ্টির লোভ দমন',
+    benefitEn: 'Mimics insulin action to clear stubborn blood sugar without causing mid-day brain fog or intense sugar cravings in PCOS.',
+    benefitBn: 'দারুচিনি ইনসুলিনের মতো কাজ করে রক্তে শর্করার মাত্রা নিয়ন্ত্রণ রাখে। এটি খাওয়ার পর মিষ্টি খাওয়ার তীব্র ইচ্ছা কমায় এবং ডিম্বস্ফোটন ঘটাতে সাহায্য করে।',
+    usage: '১ টুকরো খাঁটি সিলন দারুচিনি ফুটন্ত পানিতে ১০ মিনিট ভিজিয়ে রেখে বিকেলে পান করুন।'
+  },
+  {
+    id: 'food-7',
+    category: 'food',
+    categoryBn: 'পুষ্টিকর খাবার',
+    nameEn: 'Steamed Bottle Gourd & Greens (লাউ ও শাকের ঝোল)',
     nameBn: 'লাউ ও জিরার পাতলা ঝোল (Crucifer-Safe Greens)',
     target: 'থাইরয়েড বান্ধব ও লিভার ডিটক্স',
     benefitEn: 'Unlike raw cabbage or kale (which contain goitrogens that block thyroid iodine uptake), bottle gourd is completely safe for Hashimoto’s and soothes gut inflammation.',
-    benefitBn: 'কাঁচা বাঁধাকপি বা ব্রকলিতে গয়ট্রোজেন থাকে যা থাইরয়েডের ক্ষতি করতে পারে। কিন্তু লাউ ও পালং শাক সেদ্ধ করে খেলে থাইরয়েডের কোনো ক্ষতি হয় না এবং লিভারের মেটাবলিজম বাড়ে।',
+    benefitBn: 'কাঁচা বাঁধাকপি বা ব্রকলিতে গয়ট্রোজেন থাকে যা থাইরয়েডের ক্ষতি করতে পারে। কিন্তু লাউ সেদ্ধ করে খেলে থাইরয়েডের কোনো ক্ষতি হয় না এবং লিভারের মেটাবলিজম বাড়ে।',
     usage: 'দুপুরের খাবারে আদা ও জিরা দিয়ে কম মশলায় রান্না করে খাওয়া।'
   }
 ];
